@@ -25,6 +25,8 @@ namespace asgn5v1
 		double[,] vertices;
 		double[,] scrnpts;
 		double[,] ctrans = new double[4,4];  //your main transformation matrix
+        bool rotating = false;
+        int identitySize = 4 * 4;
 		private System.Windows.Forms.ImageList tbimages;
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.ToolBarButton transleftbtn;
@@ -63,7 +65,7 @@ namespace asgn5v1
 			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle(ControlStyles.UserPaint, true);
 			this.SetStyle(ControlStyles.DoubleBuffer, true);
-			Text = "COMP 4560:  Assignment 5 (Matthew Li - A00956879 & Daniel Capacio)";
+			Text = "COMP 4560:  Assignment 5 (Matthew Li - A00956879 & Daniel Capacio - A00961774)";
 			ResizeRedraw = true;
 			BackColor = Color.Black;
 			MenuItem miNewDat = new MenuItem("New &Data...",
@@ -491,27 +493,32 @@ namespace asgn5v1
 		{
 			if (e.Button == transleftbtn)
 			{
+                SetRotating(false);
                 ctrans = MMult(ctrans, Translate(-50, 0, 0));
                 Refresh();
 			}
 			if (e.Button == transrightbtn) 
 			{
+                SetRotating(false);
                 ctrans = MMult(ctrans, Translate(50, 0, 0));
                 Refresh();
 			}
 			if (e.Button == transupbtn)
 			{
+                SetRotating(false);
                 ctrans = MMult(ctrans, Translate(0, -25, 0));
                 Refresh();
 			}
 			
 			if(e.Button == transdownbtn)
 			{
+                SetRotating(false);
                 ctrans = MMult(ctrans, Translate(0, 25, 0));
                 Refresh();
 			}
 			if (e.Button == scaleupbtn) 
 			{
+                SetRotating(false);
                 //Translate to origin
                 ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
                 //apply scale reduction
@@ -522,6 +529,7 @@ namespace asgn5v1
 			}
 			if (e.Button == scaledownbtn) 
 			{
+                SetRotating(false);
                 //Translate to origin
                 ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
                 //apply scale reduction
@@ -532,6 +540,7 @@ namespace asgn5v1
 			}
 			if (e.Button == rotxby1btn) 
 			{
+                SetRotating(false);
                 //Translate to origin
                 ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
                 //apply rotation reduction
@@ -542,6 +551,7 @@ namespace asgn5v1
             }
 			if (e.Button == rotyby1btn) 
 			{
+                SetRotating(false);
                 //Translate to origin
                 ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
                 //apply rotation reduction
@@ -552,6 +562,7 @@ namespace asgn5v1
             }
 			if (e.Button == rotzby1btn) 
 			{
+                SetRotating(false);
                 //Translate to origin
                 ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
                 //apply rotation reduction
@@ -563,35 +574,74 @@ namespace asgn5v1
 
 			if (e.Button == rotxbtn) 
 			{
-				
-			}
+                SetRotating(true);
+                while (rotating)
+                {
+                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                    ctrans = MMult(ctrans, RotateUnit('x'));
+                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                    Refresh();
+                    System.Threading.Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
 			if (e.Button == rotybtn) 
 			{
-				
-			}
+                SetRotating(true);
+                while (rotating)
+                {
+                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                    ctrans = MMult(ctrans, RotateUnit('y'));
+                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                    Refresh();
+                    System.Threading.Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
 			
 			if (e.Button == rotzbtn) 
 			{
-				
-			}
+                SetRotating(true);
+                while (rotating)
+                {
+                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                    ctrans = MMult(ctrans, RotateUnit('z'));
+                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                    Refresh();
+                    System.Threading.Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
 
 			if(e.Button == shearleftbtn)
 			{
-				Refresh();
-			}
+                SetRotating(false);
+                // translate to origin -> shear -> then translate back
+                ctrans = MMult(ctrans, Translate(-scrnpts[identitySize, 0], -scrnpts[identitySize, 1], -scrnpts[0, 2]));
+                ctrans = MMult(ctrans, Shear("Left"));
+                ctrans = MMult(ctrans, Translate(scrnpts[identitySize, 0], scrnpts[identitySize, 1], scrnpts[0, 2]));
+                Refresh();
+            }
 
 			if (e.Button == shearrightbtn) 
 			{
-				Refresh();
-			}
+                SetRotating(false);
+                // translate to origin -> shear -> then translate back
+                ctrans = MMult(ctrans, Translate(-scrnpts[identitySize, 0], -scrnpts[identitySize, 1], -scrnpts[0, 2]));
+                ctrans = MMult(ctrans, Shear("Right"));
+                ctrans = MMult(ctrans, Translate(scrnpts[identitySize, 0], scrnpts[identitySize, 1], scrnpts[0, 2]));
+                Refresh();
+            }
 
 			if (e.Button == resetbtn)
 			{
+                SetRotating(false);
 				RestoreInitialImage();
 			}
 
 			if(e.Button == exitbtn) 
 			{
+                SetRotating(false);
 				Close();
 			}
 
@@ -602,6 +652,8 @@ namespace asgn5v1
             // Get center of the window
             double x = this.Width / 2;
             double y = this.Height / 2;
+            System.Diagnostics.Debug.WriteLine(x);
+            System.Diagnostics.Debug.WriteLine(y);
 
             // Get point to translate to 0
             double axisX = vertices[0, 0];
@@ -717,6 +769,40 @@ namespace asgn5v1
                     break;
                 default:
                     break;
+            }
+            return A;
+        }
+
+        void SetRotating(bool condition)
+        {
+            // set rotating to true
+            if (condition)
+            {
+                if (!rotating)
+                {
+                    rotating = true;
+                }
+            }
+            else // set rotating to false
+            {
+                if (rotating)
+                {
+                    rotating = false;
+                }
+            }
+        }
+
+        double[,] Shear(string direction)
+        {
+            double[,] A = new double[4, 4];
+            setIdentity(A, 4, 4);
+            if (direction == "Left")
+            {
+                A[1, 0] = 0.1d;
+            }
+            else if (direction == "Right")
+            {
+                A[1, 0] = -0.1d;
             }
             return A;
         }
