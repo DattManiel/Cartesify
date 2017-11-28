@@ -652,8 +652,6 @@ namespace asgn5v1
             // Get center of the window
             double x = this.Width / 2;
             double y = this.Height / 2;
-            System.Diagnostics.Debug.WriteLine(x);
-            System.Diagnostics.Debug.WriteLine(y);
 
             // Get point to translate to 0
             double axisX = vertices[0, 0];
