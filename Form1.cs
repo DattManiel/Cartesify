@@ -491,41 +491,75 @@ namespace asgn5v1
 		{
 			if (e.Button == transleftbtn)
 			{
-				Refresh();
+                ctrans = MMult(ctrans, Translate(-50, 0, 0));
+                Refresh();
 			}
 			if (e.Button == transrightbtn) 
 			{
-				Refresh();
+                ctrans = MMult(ctrans, Translate(50, 0, 0));
+                Refresh();
 			}
 			if (e.Button == transupbtn)
 			{
-				Refresh();
+                ctrans = MMult(ctrans, Translate(0, -25, 0));
+                Refresh();
 			}
 			
 			if(e.Button == transdownbtn)
 			{
-				Refresh();
+                ctrans = MMult(ctrans, Translate(0, 25, 0));
+                Refresh();
 			}
 			if (e.Button == scaleupbtn) 
 			{
-				Refresh();
+                //Translate to origin
+                ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                //apply scale reduction
+                ctrans = MMult(ctrans, UniformScale(1.1d));
+                //translate back
+                ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                Refresh();
 			}
 			if (e.Button == scaledownbtn) 
 			{
-				Refresh();
+                //Translate to origin
+                ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                //apply scale reduction
+                ctrans = MMult(ctrans, UniformScale(0.9d));
+                //translate back
+                ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                Refresh();
 			}
 			if (e.Button == rotxby1btn) 
 			{
-				
-			}
+                //Translate to origin
+                ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                //apply rotation reduction
+                ctrans = MMult(ctrans, RotateUnit('x'));
+                //translate back
+                ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                Refresh();
+            }
 			if (e.Button == rotyby1btn) 
 			{
-				
-			}
+                //Translate to origin
+                ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                //apply rotation reduction
+                ctrans = MMult(ctrans, RotateUnit('y'));
+                //translate back
+                ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                Refresh();
+            }
 			if (e.Button == rotzby1btn) 
 			{
-				
-			}
+                //Translate to origin
+                ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                //apply rotation reduction
+                ctrans = MMult(ctrans, RotateUnit('z'));
+                //translate back
+                ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                Refresh();
+            }
 
 			if (e.Button == rotxbtn) 
 			{
@@ -634,6 +668,55 @@ namespace asgn5v1
             for (int i = 0; i < 3; i++)
             {
                 A[i, i] = 1.0d * factor;
+            }
+            return A;
+        }
+
+        /*
+         * Scale an object by a certain factor
+         */
+        double[,] Scale(double xfactor, double yfactor, double zfactor)
+        {
+            double[,] A = new double[4, 4];
+            setIdentity(A, 4, 4);
+
+            A[0, 0] = 1.0d * xfactor;
+            A[1, 1] = 1.0d * yfactor;
+            A[2, 2] = 1.0d * zfactor;
+            
+            return A;
+        }
+
+        double[,] RotateUnit(char axis)
+        {
+            double cos = Math.Cos(0.05);
+            double sin = Math.Sin(0.05);
+            double[,] A = new double[4, 4];
+
+            setIdentity(A, 4, 4);
+
+            switch (axis)
+            {
+                case 'x':
+                    A[1, 1] = cos;
+                    A[1, 2] = sin;
+                    A[2, 1] = -sin;
+                    A[2, 2] = cos;
+                    break;
+                case 'y':
+                    A[0, 0] = cos;
+                    A[0, 2] = -sin;
+                    A[2, 0] = sin;
+                    A[2, 2] = cos;
+                    break;
+                case 'z':
+                    A[0, 0] = cos;
+                    A[0, 1] = sin;
+                    A[1, 0] = -sin;
+                    A[1, 1] = cos;
+                    break;
+                default:
+                    break;
             }
             return A;
         }
