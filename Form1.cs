@@ -574,42 +574,64 @@ namespace asgn5v1
 
 			if (e.Button == rotxbtn) 
 			{
-                SetRotating(true);
-                while (rotating)
+                if (rotating == false)
                 {
-                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
-                    ctrans = MMult(ctrans, RotateUnit('x'));
-                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
-                    Refresh();
-                    System.Threading.Thread.Sleep(20);
-                    Application.DoEvents();
+                    SetRotating(true);
+                    while (rotating)
+                    {
+                        ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                        ctrans = MMult(ctrans, RotateUnit('x'));
+                        ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                        Refresh();
+                        System.Threading.Thread.Sleep(10);
+                        Application.DoEvents();
+                    }
+                }
+                else
+                {
+                    SetRotating(false);
+                    RestoreInitialImage();
                 }
             }
 			if (e.Button == rotybtn) 
 			{
-                SetRotating(true);
-                while (rotating)
+                if (rotating == false)
                 {
-                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
-                    ctrans = MMult(ctrans, RotateUnit('y'));
-                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
-                    Refresh();
-                    System.Threading.Thread.Sleep(20);
-                    Application.DoEvents();
+                    SetRotating(true);
+                    while (rotating)
+                    {
+                        ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                        ctrans = MMult(ctrans, RotateUnit('y'));
+                        ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                        Refresh();
+                        System.Threading.Thread.Sleep(10);
+                        Application.DoEvents();
+                    }
+                } else
+                {
+                    SetRotating(false);
+                    RestoreInitialImage();
                 }
             }
 			
 			if (e.Button == rotzbtn) 
 			{
-                SetRotating(true);
-                while (rotating)
+                if (rotating == false)
                 {
-                    ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
-                    ctrans = MMult(ctrans, RotateUnit('z'));
-                    ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
-                    Refresh();
-                    System.Threading.Thread.Sleep(20);
-                    Application.DoEvents();
+                    SetRotating(true);
+                    while (rotating)
+                    {
+                        ctrans = MMult(ctrans, Translate(-scrnpts[0, 0], -scrnpts[0, 1], -scrnpts[0, 2]));
+                        ctrans = MMult(ctrans, RotateUnit('z'));
+                        ctrans = MMult(ctrans, Translate(scrnpts[0, 0], scrnpts[0, 1], scrnpts[0, 2]));
+                        Refresh();
+                        System.Threading.Thread.Sleep(10);
+                        Application.DoEvents();
+                    }
+                } else
+                {
+                    SetRotating(false);
+                    RestoreInitialImage();
                 }
             }
 
